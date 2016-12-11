@@ -42,6 +42,9 @@
 						<configuration>
 							<artifactItems>
 								<artifactItem>
+									<groupId>com.example.web</groupId>
+									<artifactId>ExampleWeb</artifactId>
+									<version>0.01</version>
 									<destFileName>ExampleWeb.jar</destFileName>
 								</artifactItem>
 							</artifactItems>
