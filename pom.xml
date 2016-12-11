@@ -42,10 +42,10 @@
 						<configuration>
 							<artifactItems>
 								<artifactItem>
-									<groupId>com.example.web</groupId>
-									<artifactId>ExampleWeb</artifactId>
-									<version>0.01</version>
-									<destFileName>ExampleWeb.jar</destFileName>
+									<groupId>org.eclipse.jetty</groupId>
+									<artifactId>jetty-runner</artifactId>
+									<version>9.3.3.v20150827</version>
+									<destFileName>jetty-runner.jar</destFileName>
 								</artifactItem>
 							</artifactItems>
 						</configuration>
