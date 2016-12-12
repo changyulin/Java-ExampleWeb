@@ -18,14 +18,20 @@
 	</filter-mapping>
 
 	<servlet>
-		<javaee:description></javaee:description>
-		<javaee:display-name>ServletDemo</javaee:display-name>
 		<servlet-name>ServletDemo</servlet-name>
 		<servlet-class>com.example.web.ServletDemo</servlet-class>
+	</servlet>
+	<servlet>
+		<servlet-name>AccessVerification</servlet-name>
+		<servlet-class>com.example.wechat.AccessVerification</servlet-class>
 	</servlet>
 	<servlet-mapping>
 		<servlet-name>ServletDemo</servlet-name>
 		<url-pattern>/demo</url-pattern>
+	</servlet-mapping>
+	<servlet-mapping>
+		<servlet-name>AccessVerification</servlet-name>
+		<url-pattern>/access</url-pattern>
 	</servlet-mapping>
 
 	<jsp-config>
@@ -34,4 +40,8 @@
 			<el-ignored>false</el-ignored>
 		</jsp-property-group>
 	</jsp-config>
+	
+	<welcome-file-list>  
+        <welcome-file>index.jsp</welcome-file>  
+    </welcome-file-list>  
 </web-app>
