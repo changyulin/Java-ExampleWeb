@@ -1,7 +1,9 @@
 package com.example.wechat;
 
+import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStream;
+import java.io.InputStreamReader;
 import java.io.PrintWriter;
 import java.util.HashMap;
 import java.util.List;
@@ -11,8 +13,6 @@ import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-
-
 
 public class AccessVerification extends HttpServlet {
 
@@ -48,11 +48,49 @@ public class AccessVerification extends HttpServlet {
 	 */
 	public void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		try {
-			Map<String, String> dataMap = parseXml(request);
+			// Map<String, String> dataMap = parseXml(request);
+			String input = convertStreamToString(request.getInputStream());
+			System.out.println("input:" + input);
+			Map parpMap = request.getParameterMap();
+			for (Object key : parpMap.keySet()) {
+				System.out.println(key.toString() + ":" + parpMap.get(key).toString());
+			}
+			PrintWriter out = response.getWriter();
+			out.print("");
+			out.close();
+			out = null;
 		} catch (Exception e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
+	}
+
+	public String convertStreamToString(InputStream is) {
+		/*
+		 * To convert the InputStream to String we use the
+		 * BufferedReader.readLine() method. We iterate until the BufferedReader
+		 * return null which means there's no more data to read. Each line will
+		 * appended to a StringBuilder and returned as String.
+		 */
+		BufferedReader reader = new BufferedReader(new InputStreamReader(is));
+		StringBuilder sb = new StringBuilder();
+
+		String line = null;
+		try {
+			while ((line = reader.readLine()) != null) {
+				sb.append(line + "\n");
+			}
+		} catch (IOException e) {
+			e.printStackTrace();
+		} finally {
+			try {
+				is.close();
+			} catch (IOException e) {
+				e.printStackTrace();
+			}
+		}
+
+		return sb.toString();
 	}
 
 	public static Map<String, String> parseXml(HttpServletRequest request) throws Exception {
@@ -62,18 +100,16 @@ public class AccessVerification extends HttpServlet {
 		// 从request中取得输入流
 		InputStream inputStream = request.getInputStream();
 		// 读取输入流
-		/*SAXReader reader = new SAXReader();
-		Document document = reader.read(inputStream);
-		System.out.println("post data:");
-		System.out.println(document.asXML());
-		// 得到xml根元素
-		Element root = document.getRootElement();
-		// 得到根元素的所有子节点
-		List<Element> elementList = root.elements();
-
-		// 遍历所有子节点
-		for (Element e : elementList)
-			map.put(e.getName(), e.getText());*/
+		/*
+		 * SAXReader reader = new SAXReader(); Document document =
+		 * reader.read(inputStream); System.out.println("post data:");
+		 * System.out.println(document.asXML()); // 得到xml根元素 Element root =
+		 * document.getRootElement(); // 得到根元素的所有子节点 List<Element> elementList =
+		 * root.elements();
+		 * 
+		 * // 遍历所有子节点 for (Element e : elementList) map.put(e.getName(),
+		 * e.getText());
+		 */
 
 		// 释放资源
 		inputStream.close();
