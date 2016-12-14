@@ -20,7 +20,7 @@ public class AccessVerification extends HttpServlet {
 	 * 确认请求来自微信服务器
 	 */
 	public void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-		System.out.println("Access begin!");
+		System.out.println("++++++++doGet begin++++++++++");
 		// 微信加密签名
 		String signature = request.getParameter("signature");
 		System.out.println("signature:" + signature);
@@ -33,7 +33,7 @@ public class AccessVerification extends HttpServlet {
 		// 随机字符串
 		String echostr = request.getParameter("echostr");
 		System.out.println("echostr:" + echostr);
-
+		System.out.println("++++++++doGet end++++++++++");
 		PrintWriter out = response.getWriter();
 		// 通过检验signature对请求进行校验，若校验成功则原样返回echostr，表示接入成功，否则接入失败
 		if (SignUtil.checkSignature(signature, timestamp, nonce)) {
@@ -48,13 +48,17 @@ public class AccessVerification extends HttpServlet {
 	 */
 	public void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		try {
+			System.out.println("=======doPost begin=========");
 			// Map<String, String> dataMap = parseXml(request);
 			String input = convertStreamToString(request.getInputStream());
 			System.out.println("input:" + input);
+
 			Map parpMap = request.getParameterMap();
 			for (Object key : parpMap.keySet()) {
-				System.out.println(key.toString() + ":" + parpMap.get(key).toString());
+				String name = key.toString();
+				System.out.println(name + ":" + request.getParameter(name));
 			}
+			System.out.println("=======doPost end=========");
 			PrintWriter out = response.getWriter();
 			out.print("");
 			out.close();
