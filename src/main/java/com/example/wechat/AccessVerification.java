@@ -60,7 +60,7 @@ public class AccessVerification extends HttpServlet {
 			}
 			System.out.println("=======doPost end=========");
 			PrintWriter out = response.getWriter();
-			out.print("I got you!");
+			out.print("");
 			out.close();
 			out = null;
 		} catch (Exception e) {
@@ -82,7 +82,7 @@ public class AccessVerification extends HttpServlet {
 		String line = null;
 		try {
 			while ((line = reader.readLine()) != null) {
-				sb.append(line + "\n");
+				sb.append(line);
 			}
 		} catch (IOException e) {
 			e.printStackTrace();
