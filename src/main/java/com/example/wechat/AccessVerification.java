@@ -52,15 +52,15 @@ public class AccessVerification extends HttpServlet {
 	public void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		try {
 			System.out.println("=======doPost begin=========");
-			String input = InputStreamUtil.convertStreamToString(request.getInputStream());
-			System.out.println("input:" + input);
+			//String input = InputStreamUtil.convertStreamToString(request.getInputStream());
+			//System.out.println("input:" + input);
 
 			Map parpMap = request.getParameterMap();
 			for (Object key : parpMap.keySet()) {
 				String name = key.toString();
 				System.out.println(name + ":" + request.getParameter(name));
 			}
-			System.out.println("=======doPost end=========");
+			
 			RequestParameter para = new RequestParameter(request);
 			System.out.println("yuanwen: " + para.getPostData());
 			WXBizMsgCrypt pc = new WXBizMsgCrypt(Cons.TOKEN, Cons.ENCODINGAESKEY, Cons.APPID);
@@ -68,7 +68,8 @@ public class AccessVerification extends HttpServlet {
 					para.getPostData());
 			
 			System.out.println("mingwen: " + mingwen);
-
+			
+			System.out.println("=======doPost end=========");
 			PrintWriter out = response.getWriter();
 			out.print("success");
 			out.close();
