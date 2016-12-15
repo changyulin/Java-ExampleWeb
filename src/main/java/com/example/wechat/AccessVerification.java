@@ -60,7 +60,7 @@ public class AccessVerification extends HttpServlet {
 			}
 			System.out.println("=======doPost end=========");
 			PrintWriter out = response.getWriter();
-			out.print("");
+			out.print("success");
 			out.close();
 			out = null;
 		} catch (Exception e) {
