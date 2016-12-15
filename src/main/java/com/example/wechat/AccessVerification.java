@@ -11,6 +11,7 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import com.example.wechat.aes.AesException;
 import com.example.wechat.aes.WXBizMsgCrypt;
 import com.example.wechat.cons.Cons;
 import com.example.wechat.message.RequestParameter;
@@ -65,6 +66,7 @@ public class AccessVerification extends HttpServlet {
 			WXBizMsgCrypt pc = new WXBizMsgCrypt(Cons.TOKEN, Cons.ENCODINGAESKEY, Cons.APPID);
 			String mingwen = pc.decryptMsg(para.getMsgSignature(), para.getTimestamp(), para.getNonce(),
 					para.getPostData());
+			System.out.println("yuanwen: " + para.getPostData());
 			System.out.println("mingwen: " + mingwen);
 
 			PrintWriter out = response.getWriter();
@@ -76,6 +78,17 @@ public class AccessVerification extends HttpServlet {
 			e.printStackTrace();
 		}
 	}
+
+	/*
+	public static void main(String[] args) throws Exception {
+		String msgSignature = "8c61040f369656a6b5a89833d8aff93997be8576";
+		String timestamp = "1481794969";
+		String nonce = "1725222472";
+		String postData="<xml>    <ToUserName><![CDATA[gh_711bf813ded0]]></ToUserName>    <Encrypt><![CDATA[FyP8LauhConxDGlWNUF4F3sXA1GTn2jjMMdd2dC9IFHJNrMZYUsgacJNtKUEXwdYOObqy2uavEYuq0lVEZXPW4+JIpH65i2v/ypc1lYWJKHPcocVL1c1mmwFE/8ShTx3Qt94GPbLFrCURvOddv3NsfcLFoKoHL5SqLTGRyPYuBMYpSGyuuGRXHtD9YOApwP00ZEZyOfJ4MtppPMYUjaUgwp/kmiGr4T4p3aNlasvzL53AR5JR8y0HdrKae2snEex1AMCv6FBIhbMARVnNmdoDo5+Uc/4QI3//QAI57QEH2mFABGYPlr3+CumfxuyoJlqL8xtIz/GyhJGoUAYRkPclxv24owkJeYbKerWZHTBgI0o/o03GAuhsU29NO+PVpWOtLHVmC+YnhvjQNjqJM7qpw07xHISqcIS+cMSEbXLVNjkL31Ybem5gIef6ksQGrXB17XbRARkJVjilzMc/gwO7rudOD75kdfRLDkaecO4xBcdwywLMVSiIJ5px6ofMBVr]]></Encrypt></xml>";
+		WXBizMsgCrypt pc = new WXBizMsgCrypt(Cons.TOKEN, Cons.ENCODINGAESKEY, Cons.APPID);
+		String mingwen = pc.decryptMsg(msgSignature, timestamp, nonce, postData);
+		System.out.println("mingwen: " + mingwen);
+	}*/
 
 	public static Map<String, String> parseXml(HttpServletRequest request) throws Exception {
 		// 将解析结果存储在HashMap中
