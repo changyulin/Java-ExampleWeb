@@ -1,18 +1,20 @@
 package com.example.wechat;
 
-import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStream;
-import java.io.InputStreamReader;
 import java.io.PrintWriter;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+
+import com.example.wechat.aes.WXBizMsgCrypt;
+import com.example.wechat.cons.Cons;
+import com.example.wechat.message.RequestParameter;
+import com.example.wechat.utils.InputStreamUtil;
 
 public class AccessVerification extends HttpServlet {
 
@@ -49,8 +51,7 @@ public class AccessVerification extends HttpServlet {
 	public void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		try {
 			System.out.println("=======doPost begin=========");
-			// Map<String, String> dataMap = parseXml(request);
-			String input = convertStreamToString(request.getInputStream());
+			String input = InputStreamUtil.convertStreamToString(request.getInputStream());
 			System.out.println("input:" + input);
 
 			Map parpMap = request.getParameterMap();
@@ -59,6 +60,13 @@ public class AccessVerification extends HttpServlet {
 				System.out.println(name + ":" + request.getParameter(name));
 			}
 			System.out.println("=======doPost end=========");
+			RequestParameter para = new RequestParameter(request);
+
+			WXBizMsgCrypt pc = new WXBizMsgCrypt(Cons.TOKEN, Cons.ENCODINGAESKEY, Cons.APPID);
+			String mingwen = pc.decryptMsg(para.getMsgSignature(), para.getTimestamp(), para.getNonce(),
+					para.getPostData());
+			System.out.println("mingwen: " + mingwen);
+
 			PrintWriter out = response.getWriter();
 			out.print("success");
 			out.close();
@@ -67,34 +75,6 @@ public class AccessVerification extends HttpServlet {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
-	}
-
-	public String convertStreamToString(InputStream is) {
-		/*
-		 * To convert the InputStream to String we use the
-		 * BufferedReader.readLine() method. We iterate until the BufferedReader
-		 * return null which means there's no more data to read. Each line will
-		 * appended to a StringBuilder and returned as String.
-		 */
-		BufferedReader reader = new BufferedReader(new InputStreamReader(is));
-		StringBuilder sb = new StringBuilder();
-
-		String line = null;
-		try {
-			while ((line = reader.readLine()) != null) {
-				sb.append(line);
-			}
-		} catch (IOException e) {
-			e.printStackTrace();
-		} finally {
-			try {
-				is.close();
-			} catch (IOException e) {
-				e.printStackTrace();
-			}
-		}
-
-		return sb.toString();
 	}
 
 	public static Map<String, String> parseXml(HttpServletRequest request) throws Exception {

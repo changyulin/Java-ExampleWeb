@@ -4,10 +4,9 @@ import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 import java.util.Arrays;
 
-public class SignUtil {
-	// 与接口配置信息中的Token要一致  
-    private static String token = "WeiXinChangYuLin";  
-  
+import com.example.wechat.cons.Cons;
+
+public class SignUtil {  
     /** 
      * 验证签名 
      *  
@@ -17,7 +16,7 @@ public class SignUtil {
      * @return 
      */  
     public static boolean checkSignature(String signature, String timestamp, String nonce) {  
-        String[] arr = new String[] { token, timestamp, nonce };  
+        String[] arr = new String[] { Cons.TOKEN, timestamp, nonce };  
         // 将token、timestamp、nonce三个参数进行字典序排序  
         Arrays.sort(arr);  
         StringBuilder content = new StringBuilder();  
