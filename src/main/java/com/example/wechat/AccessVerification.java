@@ -62,11 +62,11 @@ public class AccessVerification extends HttpServlet {
 			}
 			System.out.println("=======doPost end=========");
 			RequestParameter para = new RequestParameter(request);
-
+			System.out.println("yuanwen: " + para.getPostData());
 			WXBizMsgCrypt pc = new WXBizMsgCrypt(Cons.TOKEN, Cons.ENCODINGAESKEY, Cons.APPID);
 			String mingwen = pc.decryptMsg(para.getMsgSignature(), para.getTimestamp(), para.getNonce(),
 					para.getPostData());
-			System.out.println("yuanwen: " + para.getPostData());
+			
 			System.out.println("mingwen: " + mingwen);
 
 			PrintWriter out = response.getWriter();
