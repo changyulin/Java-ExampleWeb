@@ -10,6 +10,13 @@ import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import javax.xml.parsers.DocumentBuilder;
+import javax.xml.parsers.DocumentBuilderFactory;
+
+import org.w3c.dom.Document;
+import org.w3c.dom.Element;
+import org.w3c.dom.Node;
+import org.w3c.dom.NodeList;
 
 import com.example.wechat.aes.AesException;
 import com.example.wechat.aes.WXBizMsgCrypt;
@@ -52,23 +59,24 @@ public class AccessVerification extends HttpServlet {
 	public void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		try {
 			System.out.println("=======doPost begin=========");
-			//String input = InputStreamUtil.convertStreamToString(request.getInputStream());
-			//System.out.println("input:" + input);
+			// String input =
+			// InputStreamUtil.convertStreamToString(request.getInputStream());
+			// System.out.println("input:" + input);
 
 			Map parpMap = request.getParameterMap();
 			for (Object key : parpMap.keySet()) {
 				String name = key.toString();
 				System.out.println(name + ":" + request.getParameter(name));
 			}
-			
+
 			RequestParameter para = new RequestParameter(request);
 			System.out.println("yuanwen: " + para.getPostData());
 			WXBizMsgCrypt pc = new WXBizMsgCrypt(Cons.TOKEN, Cons.ENCODINGAESKEY, Cons.APPID);
 			String mingwen = pc.decryptMsg(para.getMsgSignature(), para.getTimestamp(), para.getNonce(),
 					para.getPostData());
-			
+
 			System.out.println("mingwen: " + mingwen);
-			
+
 			System.out.println("=======doPost end=========");
 			PrintWriter out = response.getWriter();
 			out.print("success");
@@ -81,15 +89,14 @@ public class AccessVerification extends HttpServlet {
 	}
 
 	/*
-	public static void main(String[] args) throws Exception {
-		String msgSignature = "8c61040f369656a6b5a89833d8aff93997be8576";
-		String timestamp = "1481794969";
-		String nonce = "1725222472";
-		String postData="<xml>    <ToUserName><![CDATA[gh_711bf813ded0]]></ToUserName>    <Encrypt><![CDATA[FyP8LauhConxDGlWNUF4F3sXA1GTn2jjMMdd2dC9IFHJNrMZYUsgacJNtKUEXwdYOObqy2uavEYuq0lVEZXPW4+JIpH65i2v/ypc1lYWJKHPcocVL1c1mmwFE/8ShTx3Qt94GPbLFrCURvOddv3NsfcLFoKoHL5SqLTGRyPYuBMYpSGyuuGRXHtD9YOApwP00ZEZyOfJ4MtppPMYUjaUgwp/kmiGr4T4p3aNlasvzL53AR5JR8y0HdrKae2snEex1AMCv6FBIhbMARVnNmdoDo5+Uc/4QI3//QAI57QEH2mFABGYPlr3+CumfxuyoJlqL8xtIz/GyhJGoUAYRkPclxv24owkJeYbKerWZHTBgI0o/o03GAuhsU29NO+PVpWOtLHVmC+YnhvjQNjqJM7qpw07xHISqcIS+cMSEbXLVNjkL31Ybem5gIef6ksQGrXB17XbRARkJVjilzMc/gwO7rudOD75kdfRLDkaecO4xBcdwywLMVSiIJ5px6ofMBVr]]></Encrypt></xml>";
-		WXBizMsgCrypt pc = new WXBizMsgCrypt(Cons.TOKEN, Cons.ENCODINGAESKEY, Cons.APPID);
-		String mingwen = pc.decryptMsg(msgSignature, timestamp, nonce, postData);
-		System.out.println("mingwen: " + mingwen);
-	}*/
+	 * public static void main(String[] args) throws Exception { String
+	 * msgSignature = "8c61040f369656a6b5a89833d8aff93997be8576"; String
+	 * timestamp = "1481794969"; String nonce = "1725222472"; String postData=
+	 * "<xml>    <ToUserName><![CDATA[gh_711bf813ded0]]></ToUserName>    <Encrypt><![CDATA[FyP8LauhConxDGlWNUF4F3sXA1GTn2jjMMdd2dC9IFHJNrMZYUsgacJNtKUEXwdYOObqy2uavEYuq0lVEZXPW4+JIpH65i2v/ypc1lYWJKHPcocVL1c1mmwFE/8ShTx3Qt94GPbLFrCURvOddv3NsfcLFoKoHL5SqLTGRyPYuBMYpSGyuuGRXHtD9YOApwP00ZEZyOfJ4MtppPMYUjaUgwp/kmiGr4T4p3aNlasvzL53AR5JR8y0HdrKae2snEex1AMCv6FBIhbMARVnNmdoDo5+Uc/4QI3//QAI57QEH2mFABGYPlr3+CumfxuyoJlqL8xtIz/GyhJGoUAYRkPclxv24owkJeYbKerWZHTBgI0o/o03GAuhsU29NO+PVpWOtLHVmC+YnhvjQNjqJM7qpw07xHISqcIS+cMSEbXLVNjkL31Ybem5gIef6ksQGrXB17XbRARkJVjilzMc/gwO7rudOD75kdfRLDkaecO4xBcdwywLMVSiIJ5px6ofMBVr]]></Encrypt></xml>"
+	 * ; WXBizMsgCrypt pc = new WXBizMsgCrypt(Cons.TOKEN, Cons.ENCODINGAESKEY,
+	 * Cons.APPID); String mingwen = pc.decryptMsg(msgSignature, timestamp,
+	 * nonce, postData); System.out.println("mingwen: " + mingwen); }
+	 */
 
 	public static Map<String, String> parseXml(HttpServletRequest request) throws Exception {
 		// 将解析结果存储在HashMap中
@@ -98,17 +105,19 @@ public class AccessVerification extends HttpServlet {
 		// 从request中取得输入流
 		InputStream inputStream = request.getInputStream();
 		// 读取输入流
-		/*
-		 * SAXReader reader = new SAXReader(); Document document =
-		 * reader.read(inputStream); System.out.println("post data:");
-		 * System.out.println(document.asXML()); // 得到xml根元素 Element root =
-		 * document.getRootElement(); // 得到根元素的所有子节点 List<Element> elementList =
-		 * root.elements();
-		 * 
-		 * // 遍历所有子节点 for (Element e : elementList) map.put(e.getName(),
-		 * e.getText());
-		 */
+		DocumentBuilderFactory dbf = DocumentBuilderFactory.newInstance();
+		DocumentBuilder db = dbf.newDocumentBuilder();
+		Document doc = db.newDocument();
+		// SAXReader reader = new SAXReader();
+		Document document = db.parse(inputStream);
+		System.out.println("post data:");
+		Element root = document.getDocumentElement();
+		NodeList nodeList = root.getChildNodes();
 
+		for (int i = 0; i < nodeList.getLength(); i++) {
+			String name = nodeList.item(i).getNodeName();
+			String value = nodeList.item(i).getNodeValue();
+		}
 		// 释放资源
 		inputStream.close();
 		inputStream = null;
